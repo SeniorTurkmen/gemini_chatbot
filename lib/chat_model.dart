@@ -17,3 +17,7 @@ class ChatModel {
     this.mineType,
   });
 }
+
+class LoadingMessage extends ChatModel {
+  LoadingMessage() : super(message: 'loading', name: 'loading', time: 'null');
+}
