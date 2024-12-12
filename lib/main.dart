@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-const apiKey = 'AIzaSyCzmRc1hyvS8165YFh2sSWW6wNsSkoPxHw';
+const apiKey = '';
 void main() {
   runApp(const MyApp());
 }
@@ -102,27 +102,35 @@ class _GeminiChatState extends State<GeminiChat> {
         appBar: AppBar(
           title: const Text('Gemini Chat'),
         ),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniCenterFloat,
-        floatingActionButton: _inputField(context),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 100),
-            itemCount: messages.length,
-            itemBuilder: (context, index) {
-              final message = messages[index];
-              return _ChatItemWidget(message: message);
-            },
-          ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 100),
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messages[index];
+                    return _ChatItemWidget(message: message);
+                  },
+                ),
+              ),
+            ),
+            _inputField(context),
+          ],
         ));
   }
 
-  Container _inputField(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(color: Colors.grey),
+  DecoratedBox _inputField(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(.1),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 5) +
+            EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,67 +140,93 @@ class _GeminiChatState extends State<GeminiChat> {
                 fit: StackFit.loose,
                 alignment: Alignment.topRight,
                 children: [
-                  Image.memory(
-                    image!,
-                    width: 100,
-                    height: 100,
-                  ),
-                  Container(
-                    color: Colors.white.withOpacity(0.5),
-                    height: 100,
-                    width: 100,
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.memory(
+                        image!,
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
                   ),
                   Positioned(
                     right: 10,
                     top: 0,
-                    child: GestureDetector(
-                      onTap: () {
-                        image = null;
-                        mineType = null;
-                        setState(() {});
-                      },
-                      child: const Icon(
-                        Icons.close,
-                        color: Colors.red,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(.5)),
+                      child: IconButton(
+                        onPressed: () {
+                          image = null;
+                          mineType = null;
+                          setState(() {});
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    onEditingComplete: () {
-                      if (_controller.text.isNotEmpty) {
-                        createModel();
-                      }
-                    },
-                    onChanged: (value) {
-                      setState(() {});
-                    },
-                  ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(.3),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                IconButton(
-                  onPressed: _controller.text.isEmpty
-                      ? null
-                      : () async {
-                          createModel();
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        onEditingComplete: () {
+                          if (_controller.text.isNotEmpty) {
+                            createModel();
+                          }
                         },
-                  icon: const Icon(
-                    Icons.send,
-                  ),
-                  color: Theme.of(context).primaryColor,
+                        onTapOutside: (_) {
+                          FocusScope.of(context).unfocus();
+                        },
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                          hintText: 'Type a message',
+                        ),
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: _controller.text.isEmpty
+                          ? null
+                          : () async {
+                              createModel();
+                            },
+                      icon: const Icon(
+                        Icons.send,
+                      ),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    IconButton(
+                      onPressed: action,
+                      icon: const Icon(
+                        Icons.attach_file,
+                      ),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ],
                 ),
-                IconButton(
-                  onPressed: action,
-                  icon: const Icon(
-                    Icons.attach_file,
-                  ),
-                  color: Theme.of(context).primaryColor,
-                ),
-              ],
+              ),
             ),
           ],
         ),
@@ -210,7 +244,7 @@ class _GeminiChatState extends State<GeminiChat> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Center(
-                child: Container(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: const Color(0xFFDDDDDD),
                     borderRadius: BorderRadius.circular(8),
@@ -245,6 +279,7 @@ class _GeminiChatState extends State<GeminiChat> {
                         image = await value.readAsBytes();
                         setState(() {});
                       }
+                      Navigator.pop(context);
                     });
                   },
                 ),
@@ -264,8 +299,10 @@ class _GeminiChatState extends State<GeminiChat> {
                         mineType = value.mimeType ??
                             'image/${value.name.split('.').last.toLowerCase()}';
                         image = await value.readAsBytes();
+
                         setState(() {});
                       }
+                      Navigator.pop(context);
                     });
                   },
                 ),
@@ -302,7 +339,7 @@ class _ChatItemWidget extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
+              topLeft: const Radius.circular(10),
               topRight: const Radius.circular(10),
               bottomLeft:
                   message.isUser ? const Radius.circular(10) : Radius.zero,
@@ -310,8 +347,8 @@ class _ChatItemWidget extends StatelessWidget {
                   message.isUser ? Radius.zero : const Radius.circular(10),
             ),
             color: message.isUser
-                ? Theme.of(context).primaryColor
-                : Theme.of(context).disabledColor,
+                ? Theme.of(context).primaryColor.withOpacity(.6)
+                : Theme.of(context).disabledColor.withOpacity(.3),
           ),
           child: message is LoadingMessage
               ? Padding(
@@ -321,22 +358,31 @@ class _ChatItemWidget extends StatelessWidget {
                     size: 24,
                   ),
                 )
-              : Column(
-                  children: [
-                    if (message.image != null)
+              : ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.sizeOf(context).width * .70),
+                  child: Column(
+                    children: [
+                      if (message.image != null)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.memory(message.image!,
+                              width: 100, height: 100),
+                        ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.memory(message.image!,
-                            width: 100, height: 100),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          message.message,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700),
+                        ),
                       ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        message.message,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
         ),
       ),
