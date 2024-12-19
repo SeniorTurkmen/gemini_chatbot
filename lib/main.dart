@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-const apiKey = 'AIzaSyCzmRc1hyvS8165YFh2sSWW6wNsSkoPxHw';
+const apiKey = '';
 void main() {
   runApp(const MyApp());
 }
