@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-const apiKey = '';
+const apiKey = 'AIzaSyCzmRc1hyvS8165YFh2sSWW6wNsSkoPxHw';
 void main() {
   runApp(const MyApp());
 }
@@ -66,8 +66,6 @@ class _GeminiChatState extends State<GeminiChat> {
         time: DateTime.now().toString(),
       ));
     } catch (e) {
-      // Log the error or show a message to the user
-      print('Failed to send message: $e');
       messages.remove(messages.last);
       messages.add(ChatModel(
         name: 'Error',
@@ -125,8 +123,8 @@ class _GeminiChatState extends State<GeminiChat> {
   DecoratedBox _inputField(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(.1),
-          borderRadius: BorderRadius.only(
+          color: Colors.grey.withValues(alpha: .1),
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 5) +
@@ -142,7 +140,7 @@ class _GeminiChatState extends State<GeminiChat> {
                 children: [
                   DecoratedBox(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: .2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Padding(
@@ -160,7 +158,7 @@ class _GeminiChatState extends State<GeminiChat> {
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(.5)),
+                          color: Colors.white.withValues(alpha: .5)),
                       child: IconButton(
                         onPressed: () {
                           image = null;
@@ -180,7 +178,7 @@ class _GeminiChatState extends State<GeminiChat> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(.3),
+                  color: Colors.white.withValues(alpha: .3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -320,7 +318,6 @@ class _GeminiChatState extends State<GeminiChat> {
 
 class _ChatItemWidget extends StatelessWidget {
   const _ChatItemWidget({
-    super.key,
     required this.message,
   });
 
@@ -347,8 +344,8 @@ class _ChatItemWidget extends StatelessWidget {
                   message.isUser ? Radius.zero : const Radius.circular(10),
             ),
             color: message.isUser
-                ? Theme.of(context).primaryColor.withOpacity(.6)
-                : Theme.of(context).disabledColor.withOpacity(.3),
+                ? Theme.of(context).primaryColor.withValues(alpha: .6)
+                : Theme.of(context).disabledColor.withValues(alpha: .3),
           ),
           child: message is LoadingMessage
               ? Padding(
